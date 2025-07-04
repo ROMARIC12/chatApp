@@ -6,9 +6,7 @@ const path = require('path');
 const app = express();
 
 // Set BASE_URL for media files
-process.env.BASE_URL = process.env.NODE_ENV === 'production'
-    ? 'YOUR_PRODUCTION_URL'
-    : `http://localhost:${process.env.PORT}`;
+const BASE_URL = process.env.BASE_URL;
 
 // Middleware
 app.use(express.json());
