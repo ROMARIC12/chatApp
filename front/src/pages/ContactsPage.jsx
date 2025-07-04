@@ -11,17 +11,22 @@ import {
   Alert,
   TextField,
   InputAdornment,
-  IconButton
+  IconButton,
+  Badge, // NOUVEAU: Import de Badge pour l'indicateur de statut
 } from '@mui/material';
 import { Search as SearchIcon, Chat as ChatIcon } from '@mui/icons-material';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../contexts/AuthContext';
 import { useChat } from '../contexts/ChatContext';
+import { useSocket } from '../contexts/SocketContext'; // NOUVEAU: Import de useSocket
 import axios from 'axios';
+import { formatDistanceToNowStrict } from 'date-fns'; // Pour le temps "last seen"
+import { fr } from 'date-fns/locale'; // Pour la locale française
 
 const ContactsPage = () => {
   const { user } = useAuth();
-  const { createChat, selectChat } = useChat(); // Utiliser selectChat pour la stabilité
+  const { createChat, selectChat } = useChat();
+  const { onlineUsers } = useSocket(); // NOUVEAU: Accès à onlineUsers
   const [allUsers, setAllUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -40,6 +45,7 @@ const ContactsPage = () => {
         const config = {
           headers: { Authorization: `Bearer ${user.token}` },
         };
+        // Récupère tous les utilisateurs sauf l'utilisateur actuel
         const { data } = await axios.get(`${API_BASE_URL}/users/all`, config);
         setAllUsers(data);
       } catch (err) {
@@ -54,7 +60,6 @@ const ContactsPage = () => {
 
   const handleCreatePrivateChat = async (targetUserId) => {
     try {
-      // createChat est déjà conçu pour sélectionner le chat après création
       await createChat(targetUserId);
     } catch (err) {
       console.error('Error creating private chat:', err);
@@ -66,6 +71,33 @@ const ContactsPage = () => {
     u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     u.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // NOUVEAU: Fonction pour déterminer le statut en ligne d'un utilisateur
+  const getOnlineStatus = (contactId) => {
+    const statusInfo = onlineUsers[contactId];
+    if (!statusInfo) {
+      return { status: 'offline', text: 'offline', color: 'error.main' };
+    }
+
+    if (statusInfo.status === 'online') {
+      return { status: 'online', text: 'online', color: 'success.main' };
+    }
+
+    if (statusInfo.lastSeen) {
+      const lastSeenDate = new Date(statusInfo.lastSeen);
+      const now = new Date();
+      const diffMinutes = (now.getTime() - lastSeenDate.getTime()) / (1000 * 60);
+
+      if (diffMinutes < 15) { // Moins de 15 minutes, considéré comme "récemment en ligne"
+        return {
+          status: 'recently-online',
+          text: `last seen ${formatDistanceToNowStrict(lastSeenDate, { addSuffix: true, locale: fr })}`,
+          color: 'warning.main'
+        };
+      }
+    }
+    return { status: 'offline', text: 'offline', color: 'error.main' };
+  };
 
   return (
     <Box sx={{ display: 'flex', width: '100vw', height: '100vh' }}>
@@ -103,38 +135,59 @@ const ContactsPage = () => {
               No contacts found.
             </Typography>
           ) : (
-            filteredUsers.map((contact) => (
-              <ListItem
-                key={contact._id}
-                sx={{
-                  mb: 1,
-                  borderRadius: 1,
-                  border: '1px solid #e0e0e0',
-                }}
-                secondaryAction={
-                  <IconButton edge="end" aria-label="chat" onClick={() => handleCreatePrivateChat(contact._id)}>
-                    <ChatIcon />
-                  </IconButton>
-                }
-              >
-                <ListItemAvatar>
-                  <Avatar src={contact.profilePicture || '/default-avatar.png'} />
-                </ListItemAvatar>
-                <ListItemText
-                  primary={<Typography variant="subtitle1" fontWeight="bold">{contact.name}</Typography>}
-                  secondary={
-                    <>
-                      <Typography component="span" variant="body2" color="text.secondary">
-                        {contact.email}
-                      </Typography>
-                      <Typography component="span" variant="caption" color="text.disabled" sx={{ display: 'block' }}>
-                        Status: {contact.status}
-                      </Typography>
-                    </>
+            filteredUsers.map((contact) => {
+              const status = getOnlineStatus(contact._id); // Récupère le statut pour chaque contact
+              return (
+                <ListItem
+                  key={contact._id}
+                  sx={{
+                    mb: 1,
+                    borderRadius: 1,
+                    border: '1px solid #e0e0e0',
+                  }}
+                  secondaryAction={
+                    <IconButton edge="end" aria-label="chat" onClick={() => handleCreatePrivateChat(contact._id)}>
+                      <ChatIcon />
+                    </IconButton>
                   }
-                />
-              </ListItem>
-            ))
+                >
+                  <ListItemAvatar sx={{ position: 'relative' }}> {/* Ajout de position: 'relative' */}
+                    <Avatar src={contact.profilePicture || '/default-avatar.png'} />
+                    {/* NOUVEAU: Affichage du badge de statut */}
+                    <Badge
+                      variant="dot"
+                      sx={{
+                        '& .MuiBadge-badge': {
+                          backgroundColor: status.color,
+                          color: status.color,
+                          boxShadow: '0 0 0 2px white',
+                          width: 10,
+                          height: 10,
+                          borderRadius: '50%',
+                          position: 'absolute',
+                          bottom: 2,
+                          right: 2,
+                        },
+                      }}
+                    />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={<Typography variant="subtitle1" fontWeight="bold">{contact.name}</Typography>}
+                    secondary={
+                      <>
+                        <Typography component="span" variant="body2" color="text.secondary">
+                          {contact.email}
+                        </Typography>
+                        {/* NOUVEAU: Affichage du texte de statut */}
+                        <Typography component="span" variant="caption" color={status.color} sx={{ display: 'block' }}>
+                          Status: {status.text}
+                        </Typography>
+                      </>
+                    }
+                  />
+                </ListItem>
+              );
+            })
           )}
         </List>
       </Box>

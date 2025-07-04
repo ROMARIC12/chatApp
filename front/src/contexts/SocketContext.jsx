@@ -8,7 +8,7 @@ export const SocketProvider = ({ children }) => {
   const { user } = useAuth();
   const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
-  const [onlineUsers, setOnlineUsers] = useState({}); // { userId: status }
+  const [onlineUsers, setOnlineUsers] = useState({}); // { userId: { status: 'online'|'offline', lastSeen: 'ISOString'|null } }
   const typingTimers = useRef({}); // To manage typing status debounce
 
   useEffect(() => {
@@ -28,13 +28,19 @@ export const SocketProvider = ({ children }) => {
         console.log('Socket Disconnected');
       });
 
-      // Listen for user status updates
+      // Écoute les mises à jour de statut individuelles (pour les changements en temps réel)
       newSocket.on('user status update', ({ userId, status, lastSeen }) => {
         console.log(`User ${userId} is now ${status}`);
         setOnlineUsers(prev => ({
             ...prev,
             [userId]: { status, lastSeen }
         }));
+      });
+
+      // NOUVEAU: Écoute la liste complète des utilisateurs en ligne au démarrage
+      newSocket.on('online users', (allStatuses) => {
+          console.log('Received initial online users list:', allStatuses);
+          setOnlineUsers(allStatuses);
       });
 
       setSocket(newSocket);
@@ -44,30 +50,30 @@ export const SocketProvider = ({ children }) => {
         newSocket.off('connect');
         newSocket.off('disconnect');
         newSocket.off('user status update');
+        newSocket.off('online users'); // NOUVEAU: Nettoyer ce listener aussi
       };
     } else if (socket) {
-      // If user logs out, disconnect socket
+      // Si l'utilisateur se déconnecte, déconnecter le socket
       socket.disconnect();
       setSocket(null);
+      setOnlineUsers({}); // Vider les utilisateurs en ligne
     }
-  }, [user]);
+  }, [user]); // Dépendance sur 'user' pour reconnecter si l'utilisateur change
+
 
   const sendTypingEvent = (chatId, isTyping) => {
     if (!socket) return;
 
     if (isTyping) {
         socket.emit('typing', chatId);
-        // Clear existing timer for this chat if user keeps typing
         if (typingTimers.current[chatId]) {
             clearTimeout(typingTimers.current[chatId]);
         }
-        // Set a new timer to send 'stop typing' after a delay
         typingTimers.current[chatId] = setTimeout(() => {
             socket.emit('stop typing', chatId);
             delete typingTimers.current[chatId];
-        }, 3000); // Stop typing after 3 seconds of no activity
+        }, 3000);
     } else {
-        // If explicitly stopping typing, clear any pending timer
         if (typingTimers.current[chatId]) {
             clearTimeout(typingTimers.current[chatId]);
             delete typingTimers.current[chatId];
