@@ -16,14 +16,14 @@ const RegisterPage = () => {
     e.preventDefault();
     setError('');
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError('Mot de passe incorrect');
       return;
     }
     setLoading(true);
     try {
       await register(name, email, password);
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Registration failed');
+      setError(err.response?.data?.message || err.message || 'echec lors de la creation de compte');
     } finally {
       setLoading(false);
     }
