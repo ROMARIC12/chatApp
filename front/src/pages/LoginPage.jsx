@@ -17,7 +17,7 @@ const LoginPage = () => {
     try {
       await login(email, password);
     } catch (err) {
-      setError(err.message || 'An unexpected error occurred during login.');
+      setError(err.message || 'desole une erreur est survenu lors de la connexion.');
     } finally {
       setLoading(false);
     }
