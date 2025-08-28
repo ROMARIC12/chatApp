@@ -50,7 +50,7 @@ const ContactsPage = () => {
         setAllUsers(data);
       } catch (err) {
         console.error('Failed to fetch all users:', err);
-        setError(err.response?.data?.message || 'Failed to load contacts.');
+        setError(err.response?.data?.message || 'echec lors du chargement des contacts.');
       } finally {
         setLoading(false);
       }
@@ -63,7 +63,7 @@ const ContactsPage = () => {
       await createChat(targetUserId);
     } catch (err) {
       console.error('Error creating private chat:', err);
-      setError(err.response?.data?.message || 'Failed to start chat.');
+      setError(err.response?.data?.message || 'impossible de demarrer le chat.');
     }
   };
 
@@ -108,7 +108,7 @@ const ContactsPage = () => {
           <TextField
             fullWidth
             variant="outlined"
-            placeholder="Search contacts by name or email..."
+            placeholder="trouver le contacts par nom ou mail..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             size="small"
@@ -132,7 +132,7 @@ const ContactsPage = () => {
             <Alert severity="error">{error}</Alert>
           ) : filteredUsers.length === 0 ? (
             <Typography variant="body2" color="text.secondary" sx={{ p: 2 }}>
-              No contacts found.
+                contacts non trouvé.
             </Typography>
           ) : (
             filteredUsers.map((contact) => {
