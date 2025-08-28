@@ -42,7 +42,7 @@ const GroupPage = () => {
   const handleAddParticipant = async () => {
     setSearchError('');
     if (!currentParticipantEmail) {
-      setSearchError('Email cannot be empty.');
+      setSearchError('veuillez renseigner votre mail.');
       return;
     }
 
@@ -130,14 +130,14 @@ const GroupPage = () => {
       <Sidebar />
       <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
         <Box sx={{ padding: 2, borderBottom: '1px solid #e0e0e0' }}>
-          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Groups</Typography>
+          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Groupes</Typography>
           <Button
             variant="contained"
             startIcon={<AddIcon />}
             sx={{ mt: 2 }}
             onClick={() => setOpenCreateGroupDialog(true)}
           >
-            Creer un nouveau groupe
+            Creer un groupe
           </Button>
         </Box>
 
@@ -222,7 +222,7 @@ const GroupPage = () => {
                                     onClick={() => handleJoinGroup(group._id)}
                                     disabled={loading}
                                 >
-                                    {loading ? <CircularProgress size={16} /> : 'Join'}
+                                    {loading ? <CircularProgress size={16} /> : 'Rejoindre'}
                                 </Button>
                             )
                         }
@@ -252,7 +252,7 @@ const GroupPage = () => {
 
       {/* Create New Group Dialog */}
       <Dialog open={openCreateGroupDialog} onClose={() => setOpenCreateGroupDialog(false)} fullWidth maxWidth="sm">
-        <DialogTitle>Create New Group</DialogTitle>
+        <DialogTitle>Creer un nouveau groupe</DialogTitle>
         <DialogContent dividers>
           {creationError && <Alert severity="error" sx={{ mb: 2 }}>{creationError}</Alert>}
           <TextField
@@ -279,7 +279,7 @@ const GroupPage = () => {
             onChange={(e) => setGroupDescription(e.target.value)}
             sx={{ mb: 2 }}
           />
-          <Typography variant="subtitle1" sx={{ mt: 2, mb: 1 }}>Add Participants</Typography>
+          <Typography variant="subtitle1" sx={{ mt: 2, mb: 1 }}>Ajouter un Participant </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
             <TextField
               label="Email"
@@ -298,7 +298,7 @@ const GroupPage = () => {
               disabled={loading}
               startIcon={loading ? <CircularProgress size={20} /> : <AddIcon />}
             >
-              Add
+              Ajouter
             </Button>
           </Box>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
@@ -314,7 +314,7 @@ const GroupPage = () => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenCreateGroupDialog(false)}>Cancel</Button>
+          <Button onClick={() => setOpenCreateGroupDialog(false)}>Annuler</Button>
           <Button onClick={handleCreateGroup} variant="contained" disabled={loading}>
             Creer un groupe
           </Button>
