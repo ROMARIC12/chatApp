@@ -170,7 +170,7 @@ const GroupPage = () => {
             <Typography variant="subtitle2" sx={{ paddingBottom: 1, color: 'text.secondary' }}>Your Groups</Typography>
             {allUserGroups.length === 0 && (
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    You are not a member of any groups. Create one or join a public group!
+                    Vous ne faites pas parti e ce groupe. creer en un ou rejoigner !
                 </Typography>
             )}
             {allUserGroups.map((group) => (
@@ -194,10 +194,10 @@ const GroupPage = () => {
 
             <Divider sx={{ my: 2 }} />
 
-            <Typography variant="subtitle2" sx={{ paddingBottom: 1, color: 'text.secondary' }}>Discover Public Groups</Typography>
+            <Typography variant="subtitle2" sx={{ paddingBottom: 1, color: 'text.secondary' }}>Decouvrez les groupes</Typography>
             {publicGroups.length === 0 && ( // Utilise publicGroups directement ici
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    No public groups to discover at the moment.
+                    Aucun groupe pour le moment.
                 </Typography>
             )}
             {publicGroups.map((group) => { // Itère sur TOUS les groupes publics
@@ -213,7 +213,7 @@ const GroupPage = () => {
                         }}
                         secondaryAction={
                             isMember ? (
-                                <Chip label="Already a member" color="success" variant="outlined" size="small" />
+                                <Chip label="deja membre" color="success" variant="outlined" size="small" />
                             ) : (
                                 <Button
                                     variant="outlined"
@@ -258,7 +258,7 @@ const GroupPage = () => {
           <TextField
             autoFocus
             margin="dense"
-            label="Group Title"
+            label="Nom du groupe"
             type="text"
             fullWidth
             variant="outlined"
@@ -269,7 +269,7 @@ const GroupPage = () => {
           />
           <TextField
             margin="dense"
-            label="Group Description (Optional)"
+            label="Description du groupe (Optionel)"
             type="text"
             fullWidth
             multiline
