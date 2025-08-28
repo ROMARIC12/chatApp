@@ -2,7 +2,6 @@
     const express = require('express');
     const cors = require('cors');
     const path = require('path');
-
     const app = express();
 
     // Set BASE_URL for media files
