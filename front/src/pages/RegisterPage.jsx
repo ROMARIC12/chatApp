@@ -56,7 +56,7 @@ const RegisterPage = () => {
         }}
       >
         <Typography variant="h4" component="h1" gutterBottom align="center" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
-          Register
+          Creer un compte
         </Typography>
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
         <form onSubmit={handleSubmit}>
@@ -65,7 +65,7 @@ const RegisterPage = () => {
             variant="outlined"
             fullWidth
             margin="normal"
-            value={name}
+            value={Nom}
             onChange={(e) => setName(e.target.value)}
             required
           />
