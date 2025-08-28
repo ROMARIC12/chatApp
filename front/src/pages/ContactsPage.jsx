@@ -104,7 +104,7 @@ const ContactsPage = () => {
       <Sidebar />
       <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
         <Box sx={{ padding: 2, borderBottom: '1px solid #e0e0e0' }}>
-          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Contacts</Typography>
+          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Contact</Typography>
           <TextField
             fullWidth
             variant="outlined"
