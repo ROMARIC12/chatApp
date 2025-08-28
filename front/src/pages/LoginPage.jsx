@@ -86,7 +86,7 @@ const LoginPage = () => {
           </Button>
         </form>
         <Typography variant="body2" align="center" sx={{ mt: 2 }}>
-          Don't have an account? <Link to="/register" style={{ textDecoration: 'none', color: '#1976d2' }}>Register</Link>
+          Pas de compte? <Link to="/register" style={{ textDecoration: 'none', color: '#1976d2' }}>Creer un compte</Link>
         </Typography>
       </Paper>
     </Box>
