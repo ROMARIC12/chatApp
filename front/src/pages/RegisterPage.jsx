@@ -65,7 +65,7 @@ const RegisterPage = () => {
             variant="outlined"
             fullWidth
             margin="normal"
-            value={Nom}
+            value={Name}
             onChange={(e) => setName(e.target.value)}
             required
           />
