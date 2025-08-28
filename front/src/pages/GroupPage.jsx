@@ -92,7 +92,7 @@ const GroupPage = () => {
       // selectChat est appelé automatiquement par createGroup
     } catch (error) {
       console.error('Error creating group:', error);
-      setCreationError(error.response?.data?.message || 'Failed to create group.');
+      setCreationError(error.response?.data?.message || 'Impossible de creer le groupe.');
     } finally {
       setLoading(false);
     }
@@ -104,10 +104,10 @@ const GroupPage = () => {
       setLoading(true); // Activer le chargement pour le bouton "Join"
       await addGroupMember(groupId, user._id); // Ajouter l'utilisateur actuel au groupe
       await selectChat(groupId); // Après avoir rejoint, naviguer vers ce chat
-      alert('You have successfully joined the group!'); // Utiliser une alerte temporaire
+      alert('Vous avez rejoins le groupe!'); // Utiliser une alerte temporaire
     } catch (error) {
-      console.error('Error joining group:', error);
-      alert(error.response?.data?.message || 'Failed to join group.'); // Utiliser une alerte temporaire
+      console.error('Imposible de rejoindre le groupe:', error);
+      alert(error.response?.data?.message || 'impossible de rejoindre.'); // Utiliser une alerte temporaire
     } finally {
       setLoading(false); // Désactiver le chargement
     }
