@@ -60,11 +60,11 @@ const GroupPage = () => {
         setParticipants([...participants, { _id: foundUser._id, name: foundUser.name, email: foundUser.email }]);
         setCurrentParticipantEmail('');
       } else {
-        setSearchError('User not found or you cannot add yourself.');
+        setSearchError('utilisateur non trouve ajoute un.');
       }
     } catch (error) {
-      console.error('Error finding user:', error);
-      setSearchError(error.response?.data?.message || 'Failed to find user.');
+      console.error('impossible de trouver celui que vous cherchez:', error);
+      setSearchError(error.response?.data?.message || 'impossible de trouver.');
     } finally {
       setLoading(false);
     }
@@ -137,14 +137,14 @@ const GroupPage = () => {
             sx={{ mt: 2 }}
             onClick={() => setOpenCreateGroupDialog(true)}
           >
-            Create New Group
+            Creer un nouveau groupe
           </Button>
         </Box>
 
         <List sx={{ flexGrow: 1, overflowY: 'auto', padding: 2 }}>
             {pinnedUserGroups.length > 0 && (
                 <>
-                    <Typography variant="subtitle2" sx={{ paddingBottom: 1, color: 'text.secondary' }}>Pinned Groups</Typography>
+                    <Typography variant="subtitle2" sx={{ paddingBottom: 1, color: 'text.secondary' }}>Archiver un groupe</Typography>
                     {pinnedUserGroups.map((group) => (
                         <ListItem
                             key={group._id}
@@ -233,7 +233,7 @@ const GroupPage = () => {
                             secondary={
                                 <>
                                     <Typography component="span" variant="body2" color="text.secondary">
-                                        {group.users.length} members
+                                        {group.users.length} membre
                                     </Typography>
                                     {group.chatDescription && (
                                         <Typography component="span" variant="caption" color="text.disabled" sx={{ display: 'block' }}>
@@ -316,7 +316,7 @@ const GroupPage = () => {
         <DialogActions>
           <Button onClick={() => setOpenCreateGroupDialog(false)}>Cancel</Button>
           <Button onClick={handleCreateGroup} variant="contained" disabled={loading}>
-            Create Group
+            Creer un groupe
           </Button>
         </DialogActions>
       </Dialog>
