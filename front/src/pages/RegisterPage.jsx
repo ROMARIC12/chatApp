@@ -61,7 +61,7 @@ const RegisterPage = () => {
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
         <form onSubmit={handleSubmit}>
           <TextField
-            label="Name"
+            label="Nom"
             variant="outlined"
             fullWidth
             margin="normal"
